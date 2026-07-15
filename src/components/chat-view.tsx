@@ -44,7 +44,7 @@ import type { ChatHandoffContext } from "@/lib/chat-task-handoff";
 import { createSmartTaskFromChat } from "@/lib/chat-task-autofill";
 import type { Card } from "@/lib/cave-board-types";
 import { TaskLinkPicker } from "@/components/task-link-picker";
-import { openExternalUrl } from "@/lib/open-external";
+import { openExternalUrl, openSystemBrowserUrl } from "@/lib/open-external";
 import {
   attachmentIcon,
   extractAgentAttachmentMarkers,
@@ -4081,7 +4081,8 @@ export const ChatView = forwardRef<ChatViewHandle, Props>(function ChatView(
         appendSystem(
           `Started Omnigent session ${result.sessionId}. Open: ${result.webUrl}`,
         );
-        void openExternalUrl(result.webUrl);
+        // Top-level tab — Omnigent __Host- session cookies break in Cave's iframe browser.
+        void openSystemBrowserUrl(result.webUrl);
         announce("Omnigent session started");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Omnigent run failed");

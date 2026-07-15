@@ -516,8 +516,9 @@ export function HomeComposer({
           clearDraft();
           clearAttachments();
           onToast("Omnigent session started — opening…");
-          const { openExternalUrl } = await import("@/lib/open-external");
-          void openExternalUrl(result.webUrl);
+          const { openSystemBrowserUrl } = await import("@/lib/open-external");
+          // Top-level tab — Omnigent __Host- session cookies break in Cave's iframe browser.
+          void openSystemBrowserUrl(result.webUrl);
         } finally {
           setSending(false);
         }

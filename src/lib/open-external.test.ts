@@ -35,10 +35,30 @@ assert.match(
   /window\.location\.assign\("\/#browser"\)/,
   "callers outside Workspace should route to the Workspace browser surface",
 );
-assert.doesNotMatch(
+assert.match(
   helper,
-  /shell_open|window\.open/,
-  "shared external URL helper should not open the system browser or a new tab",
+  /export function openExternalUrl\(url: string\): void \{\s*openInAppBrowserUrl\(url\);\s*\}/,
+  "openExternalUrl stays a pure in-app handoff (no window.open)",
+);
+assert.match(
+  helper,
+  /export function openSystemBrowserUrl\(url: string\): void/,
+  "cookie-sensitive destinations (Omnigent) get an explicit system-browser opener",
+);
+assert.match(
+  helper,
+  /window\.open\(trimmed, "_blank", "noopener,noreferrer"\)/,
+  "openSystemBrowserUrl opens a real top-level tab for __Host- / SameSite cookies",
+);
+assert.match(
+  helper,
+  /export function shouldOpenInSystemBrowser\(url: string\): boolean/,
+  "Omnigent host detection is unit-testable",
+);
+assert.match(
+  helper,
+  /export function openUrl\(url: string\): void/,
+  "openUrl routes Omnigent to system browser and everything else in-app",
 );
 
 assert.match(

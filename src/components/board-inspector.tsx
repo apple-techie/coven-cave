@@ -1602,7 +1602,7 @@ export function BoardInspector({ card, familiars, sessions, projects, onClose, o
                       onClick={() => {
                         void (async () => {
                           const { startOmnigentRunFromBrowser } = await import("@/lib/omnigent/browser-run");
-                          const { openExternalUrl } = await import("@/lib/open-external");
+                          const { openSystemBrowserUrl } = await import("@/lib/open-external");
                           const result = await startOmnigentRunFromBrowser({
                             prompt: card.title,
                             familiarId: card.familiarId ?? undefined,
@@ -1614,7 +1614,8 @@ export function BoardInspector({ card, familiars, sessions, projects, onClose, o
                             window.alert(result.error);
                             return;
                           }
-                          void openExternalUrl(result.webUrl);
+                          // Top-level tab — Omnigent __Host- cookies break in Cave's iframe browser.
+                          void openSystemBrowserUrl(result.webUrl);
                         })();
                       }}
                     >
